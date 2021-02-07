@@ -12,28 +12,36 @@ This capstone project is a part of Udacity's Azure Machine Learning Engineer Nan
 
 ## Dataset Information:
 
-### Data Description
+For this capstone project, we have used [Malicious and Benign Websites](https://www.kaggle.com/xwolf12/malicious-and-benign-websites) dataset. Dataset is created with data obtained from verified sources of benign and malicious URL's in a low interactive client honeypot to isolate network traffic. To study malicious website, application and network layer features are identified, which are listed under file strucutre. Below are the resources used to create this dataset.
 
-1. URL: it is the anonimous identification of the URL analyzed in the study
-2. URL_LENGTH: it is the number of characters in the URL
-3. NUMBERSPECIALCHARACTERS: it is number of special characters identified in the URL, such as, “/”, “%”, “#”, “&”, “. “, “=”
-4. CHARSET: it is a categorical value and its meaning is the character encoding standard (also called character set).
-5. SERVER: it is a categorical value and its meaning is the operative system of the server got from the packet response.
-6. CONTENT_LENGTH: it represents the content size of the HTTP header.
-7. WHOIS_COUNTRY: it is a categorical variable, its values are the countries we got from the server response (specifically, our script used the API of Whois).
-8. WHOIS_STATEPRO: it is a categorical variable, its values are the states we got from the server response (specifically, our script used the API of Whois).
-9. WHOIS_REGDATE: Whois provides the server registration date, so, this variable has date values with format DD/MM/YYY HH:MM
-10. WHOISUPDATEDDATE: Through the Whois we got the last update date from the server analyzed
-11. TCPCONVERSATIONEXCHANGE: This variable is the number of TCP packets exchanged between the server and our honeypot client
-12. DISTREMOTETCP_PORT: it is the number of the ports detected and different to TCP
-13. REMOTE_IPS: this variable has the total number of IPs connected to the honeypot
-14. APP_BYTES: this is the number of bytes transfered
-15. SOURCEAPPPACKETS: packets sent from the honeypot to the server
-16. REMOTEAPPPACKETS: packets received from the server
-17. APP_PACKETS: this is the total number of IP packets generated during the communication between the honeypot and the server
-18. DNSQUERYTIMES: this is the number of DNS packets generated during the communication between the honeypot and the server
-19. TYPE: this is a categorical variable, its values represent the type of web page analyzed, specifically, 1 is for malicious websites and 0 is for benign websites
+	- machinelearning.inginf.units.it/data-andtools/hidden-fraudulent-urls-dataset
+	- malwaredomainlist.com
+	- https://github.com/mitchellkrogza/The-Big-List-of-Hacked-Malware-Web-Sites
 
+### File Structure:
+
+
+Column Names | Details
+------------ | -------------
+`URL` | It is the anonimous identification of the URL analyzed in the study.
+`URL_LENGTH` | It is the number of characters in the URL.
+`NUMBERSPECIALCHARACTERS` | It is number of special characters identified in the URL, such as, “/”, “%”, “#”, “&”, “. “, “=”.
+`CHARSET` | It is a categorical value and its meaning is the character encoding standard (also called character set).
+`SERVER` | It is a categorical value and its meaning is the operative system of the server got from the packet response.
+`CONTENT_LENGTH` | it represents the content size of the HTTP header.
+`WHOIS_COUNTRY` | it is a categorical variable, its values are the countries we got from the server response (specifically, our script used the API of Whois).
+`WHOIS_STATEPRO` | it is a categorical variable, its values are the states we got from the server response (specifically, our script used the API of Whois).
+`WHOIS_REGDATE` | Whois provides the server registration date, so, this variable has date values with format DD/MM/YYY HH:MM
+`WHOISUPDATEDDATE` | Through the Whois we got the last update date from the server analyzed
+`TCPCONVERSATIONEXCHANGE` | This variable is the number of TCP packets exchanged between the server and our honeypot client
+`DISTREMOTETCP_PORT` | it is the number of the ports detected and different to TCP
+`REMOTE_IPS` | this variable has the total number of IPs connected to the honeypot
+`APP_BYTES` | this is the number of bytes transfered
+`SOURCEAPPPACKETS` | packets sent from the honeypot to the server
+`REMOTEAPPPACKETS` | packets received from the server
+`APP_PACKETS` | this is the total number of IP packets generated during the communication between the honeypot and the server
+`DNSQUERYTIMES` | this is the number of DNS packets generated during the communication between the honeypot and the server
+`TYPE` | this is a categorical variable, its values represent the type of web page analyzed, specifically, 1 is for malicious websites and 0 is for benign websites
 
 ## Project Set Up and Installation
 *OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
