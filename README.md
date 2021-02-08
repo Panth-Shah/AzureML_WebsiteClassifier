@@ -6,6 +6,9 @@ Over the past few years, Web Security has become a growing concern for internet 
 
 A log term-goal of this project will be to develop a real-time system that uses Machine Learning techniques to detect malicious URLs (spam, phishing, exploits, etc.). Techniques explored involving classifying URLs based on their **Lexical** and **Host-based** features, as well as online learning to process large numbers of examples and adapt quickly to evolving URLs over time are captured from research published by PhD scholars from UC San Diago [1] & [2]. This project aims to extend research finding and construct a classifier which can predict malicious and benign website URLs, based on application layer and network characteristics utilizing captured data for this research work.
 
+## Project Set Up and Installation
+*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
+
 ## Dataset:
 
 ### Dataset Overview:
@@ -67,31 +70,46 @@ Post model training using both the approches, we will be comparing performance o
 ### Access:
 
 Azure mainly supports two types of Datasets: **A. FileDataset B. TabularDataset**. Here, we have data captured in **csv file**, which can be handled using **TabularDataset** as it is used for tabular data. Dataset is uploaded to [github repository](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Dataset/malicious_website_dataset.csv), which is later used to register datastore with Azure ML Workspace using `Dataset.Tabular.from_delimited_files()`. We can also creare a new TabularDataset by directly calling the corresponding factory methods of the class defined in `TabularDatasetFactory`.
-
+	
+```python
 	# Create AML Dataset and register it into Workspace
 	example_data = 'https://raw.githubusercontent.com/Panth-Shah/nd00333-capstone/master/Dataset/malicious_website_dataset.csv'
 	dataset = Dataset.Tabular.from_delimited_files(example_data)
-
 	# Create TabularDataset using TabularDatasetFactory
 	dataset = TabularDatasetFactory.from_delimited_files(path=example_data)
-
 	#Register Dataset in Workspace
 	dataset = dataset.register(workspace=ws, name=key, description=description_text)
-
-## Project Set Up and Installation
-*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
-
-### Overview
-*TODO*: Explain about the data you are using and where you got it from.
-
-### Task
-*TODO*: Explain the task you are going to be solving with this dataset and the features you will be using for it.
-
-### Access
-*TODO*: Explain how you are accessing the data in your workspace.
+```
 
 ## Automated ML
-*TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
+
+Azure Automated Machine Learning (`AutoML`) provides capabilities to automate iterative tasks of machine learning model development for given dataset to predict which category (Maclicious or Benign) new URL will fall into based on learnings from it's training data. In this approach, Azure Machine Learning taking user inputs such as `Dataset`, `Target Metric` and `Constraints` into account, train model into multiple iterations and will return best performing model with highest training score achieved. We will train and tune a model using the `Accuray` primary metric for this project.
+
+### AutoMLConfig:
+
+This class from Azure ML Python SDK represents configuration to submit an automated ML experiment in Azure ML. Configuration parameters used for this project includes:
+
+Configration | Details | Value
+------------ | ------------- | -------------
+`compute_target` | Azure ML compute target to run the AutoML experiment on | autoML-compute
+`task` | The type of task task to run, set as classification | classification
+`training_data` | The training data to be used within the experiment contains training feature and a label column | Tabular Dataset
+`label_column_name`	| The nae of the label column | 'Type'
+`path` | The full path to the Azure ML project folder	| './capstone-project'
+`enable_early_stopping` | Enable AutoML to stop jobs that are not performing well after a minimum number of iterations	| True
+`featurization` | Config indicator for whether featurization step should be done autometically or not	| auto
+`debug_log ` | The log file to write debug information to | 'automl_errors.log'
+`enable_onnx_compatible_models` | Whether to enable or disable enforcing the Open Neural Network Exchange (ONNX)-compatible models |   True
+
+Also AutoML settings were as follows:
+
+Configration | Details | Value
+------------ | ------------- | -------------
+`experiment_timeout_minutes` | Maximum amount of time in hours that all iterations combined can take before the experiment terminates | 30
+`max_concurrent_iterations` | Represents the maximum number of iterations that would be executed in parallel | 4
+`primary_metric` | The metric that the AutoML will optimize for model selection | Accuracy
+`n_cross_validations` | Number of cross validations to perform when user validation data is not specified |  5
+`max_cores_per_iteration` | The maximum number of threads to use for a given training iteration. -1 indicate use of all possible cores per iteration per child-run	| -1
 
 ### Results
 *TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
