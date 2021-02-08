@@ -14,7 +14,7 @@ For this capstone project, we have used [Malicious and Benign Websites](https://
 
 1. **Lexical Features:** These features allow us to capture the property that malicious URLs tend to hold different from benign URLs, for example URL domain names, keywords and lengths of the hostname (phish.biz/www.indeed.com/index.php or www.craigslist.com.phishy.biz)
 
-2. ** Host-based features:** These features allow us to identify where malicious website is hosted from, who owns them, and how they are managed.
+2. **Host-based features:** These features allow us to identify where malicious website is hosted from, who owns them, and how they are managed.
 
 	- **WHOIS Information:** This includes domain name registration dates, registrars, and registrants. Using this feature, we can tag all the websites as malicious registered by the same individual and such ownership as a malicious feature.
 
@@ -56,7 +56,7 @@ Column Names | Details
 
 ### Task:
 
-In this capstone project, we aim to create a model to classify if a website URL is `Malicious` or `Benign` with the use of dataset features explaned above. To achieve this, we will be using two approaches and compare both using **Accuracy** as a Primary Metric.
+In this capstone project, we aim to create a model to classify if a website URL is `Malicious` or `Benign` with the use of dataset features explaned above. To achieve this, we will be using two approaches and compare both using `Accuracy` as a Primary Metric.
 
 1. **Using [AutomatedML](https://docs.microsoft.com/en-us/azure/machine-learning/concept-automated-ml)** With this approach, we will be using Microsoft Azure's Automated ML feature to train and tune a model for given dataset to predict which category (Maclicious or Benign) new URL will fall into based on learnings from it's training data. In this approach, Azure Machine Learning taking user inputs such as `Dataset`, `Target Metric` and `Constraints` into account, train model into multiple iterations and will return best performing model with highest training score achieved.
 
@@ -64,10 +64,22 @@ In this capstone project, we aim to create a model to classify if a website URL 
 
 Post model training using both the approches, we will be comparing performance of both the models using performance metrics **Accuracy** and best performing model will be deployed on **Azure Container Instance (ACI)** as a web service registered with Azure workspace and open to consume by external services with provided autorization. Finally, functionality of the deployed model will be demonstrated using response received for each successful HTTP POST Request to an end-point for real-time inferencing.
 
+### Access:
+
+Azure mainly supports two types of Datasets: **A. FileDataset B. TabularDataset**. Here, we have data captured in **csv file**, which can be handled using **TabularDataset** as it is used for tabular data. Dataset is uploaded to [github repository](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Dataset/malicious_website_dataset.csv), which is later used to register datastore with Azure ML Workspace using `Dataset.Tabular.from_delimited_files()`. We can also creare a new TabularDataset by directly calling the corresponding factory methods of the class defined in `TabularDatasetFactory`.
+
+	# Create AML Dataset and register it into Workspace
+	example_data = 'https://raw.githubusercontent.com/Panth-Shah/nd00333-capstone/master/Dataset/malicious_website_dataset.csv'
+	dataset = Dataset.Tabular.from_delimited_files(example_data)
+
+	# Create TabularDataset using TabularDatasetFactory
+	dataset = TabularDatasetFactory.from_delimited_files(path=example_data)
+
+	#Register Dataset in Workspace
+	dataset = dataset.register(workspace=ws, name=key, description=description_text)
+
 ## Project Set Up and Installation
 *OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
-
-## Dataset
 
 ### Overview
 *TODO*: Explain about the data you are using and where you got it from.
