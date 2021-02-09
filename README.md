@@ -72,13 +72,13 @@ Post model training using both the approches, we will be comparing performance o
 Azure mainly supports two types of Datasets: **A. FileDataset B. TabularDataset**. Here, we have data captured in **csv file**, which can be handled using **TabularDataset** as it is used for tabular data. Dataset is uploaded to [github repository](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Dataset/malicious_website_dataset.csv), which is later used to register datastore with Azure ML Workspace using `Dataset.Tabular.from_delimited_files()`. We can also creare a new TabularDataset by directly calling the corresponding factory methods of the class defined in `TabularDatasetFactory`.
 	
 ```python
-	# Create AML Dataset and register it into Workspace
-	example_data = 'https://raw.githubusercontent.com/Panth-Shah/nd00333-capstone/master/Dataset/malicious_website_dataset.csv'
-	dataset = Dataset.Tabular.from_delimited_files(example_data)
-	# Create TabularDataset using TabularDatasetFactory
-	dataset = TabularDatasetFactory.from_delimited_files(path=example_data)
-	#Register Dataset in Workspace
-	dataset = dataset.register(workspace=ws, name=key, description=description_text)
+# Create AML Dataset and register it into Workspace
+example_data = 'https://raw.githubusercontent.com/Panth-Shah/nd00333-capstone/master/Dataset/malicious_website_dataset.csv'
+dataset = Dataset.Tabular.from_delimited_files(example_data)
+# Create TabularDataset using TabularDatasetFactory
+dataset = TabularDatasetFactory.from_delimited_files(path=example_data)
+#Register Dataset in Workspace
+dataset = dataset.register(workspace=ws, name=key, description=description_text)
 ```
 
 ## Automated ML
@@ -111,6 +111,9 @@ Configration | Details | Value
 `n_cross_validations` | Number of cross validations to perform when user validation data is not specified |  5
 `max_cores_per_iteration` | The maximum number of threads to use for a given training iteration. -1 indicate use of all possible cores per iteration per child-run	| -1
 
+`Data Featurization` is an important process while training model, as features that best characterize the pattern in the data should be selected to create predictive models. Feature engineering is a process of creating additional features that provide information that better differentiates patterns in the data. In AzureML, data-scaling and normalization techniques are applied to make feature engineering easier indicated as `featurization` in automated ML experiments. 
+Specifying `"featurization": 'auto'` enables autometic preprocessing of data which includes applying data guardrails and featurization steps like **Drop High Cardinality, Impute missing values, Generate more features, Transform and encode, Word embedding, Cluster Distance etc.**
+
 ### Results
 *TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
 
@@ -118,6 +121,50 @@ Configration | Details | Value
 
 ## Hyperparameter Tuning
 *TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
+
+In this section of the project, we will be training and tuning classifier using Azure ML's `HyperDrive package`. Here, we will train a model `Logisitc Regression` classification algorithm using AzureML python SDK with Scikit-learn to perform classification on Website URL dataset and classify URLs into malicious and benign categories.  This problem demands binary classification and as there are only two categories, this makes classification task perfect for logistic regression. It also is very fast at classifying unknown records and is easy to implement, intepret, and very efficient to train. Also for this project, as target variable falls into discrete categories, logistic regression is an ideal choice.
+
+Steps required to tune hyperparameters using Azure ML's `HyperDrive package`;
+
+1. Define the parameter search space using `Random Sampling` 
+2. Specify a `Accuracy` as a primary metric to optimize
+3. Specify early `Bendit Policy` as early termination policy for low-performing runs
+4. Allocate `aml compute` resources
+5. Launch an experiment with the defined configuration using `HyperDriveConfig`
+6. Visualize the training runs with `RunDetails` Notebook widget
+7. Select the best configuration for your model with `hyperdrive_run.get_best_run_by_primary_metric()`
+
+### Type of parameters and sampling the Hyperparameter Space:
+
+- `Regularization Strength (--C)`: This parameter is used to apply penalty on magnitude of parameters to reduce overfitting higher values of C correspond to less regularizationand and vice versa. Smaller values cause stronger regularization.
+
+- `Max Iterations (--max_iter)`: Maximum number of iterations to converge to a minima.
+
+To define random sampling over the search space of hyperparameter we are trying to optimize, we are using AzureML's `RandomParameterSampling` class. Levaraging this method of parameter sampling, users can randomly select hyperparameter from defined search space. With this sampling algorithm, AzureML lets users choose hyperparameter values from a set of discrete values or a distribution over a continuous range. This method also supports early termination of low performance runs, which is a cost effcient approach when training model on aml compute cluster.
+
+Other two approaches supported by AzureML are Grid Sampling and Bayesian Sampling:
+
+- As `Grid Sampling` only supports discrete hypeparameter, it searches over all the possibilities from defined search space. And so more compute resource is required, which is not very budget efficient fo this project. 
+
+- `Bayesian Sampling` method is based on Bayesian optimization algorithm and picks samples based on how previous samples performed to improve the primary metric of new samples. Because of that, more number of runs benefit future selection of samples, which also is not a very cost efficient solution for this project. 
+
+```python
+# Specify parameter sampler
+ps = RandomParameterSampling(
+    {
+        "--C": uniform(0.01, 100), 
+        "max_iter": choice(16, 32, 64, 128, 256)
+    }
+)
+```
+
+### Advantages of Early Stopping Policy:
+
+While working with Azure's managed aml compute cluster to train classification model for this project, it is important to maintain and imporve computational effciency.Specifying early termination policy autometically terminates poorly performing runs based on configuration parameters (`evaluation_interval`, `delay_evaluation`) provided upon defining these policies. These can be applied to HyperDrive runs and run is cancelled when the criteria of a specified policy are met.
+
+`Bendit Policy`:
+
+Among supported early termination policies by Azure ML, we are using Bendit Policy in this project. This policy is based on slack criteria, and a frequency and delay interval for evaluation. BenditPolicy determines best performing run based on selected primary metric (Accuracy for this project) and sets it as a benchmark to compare it against other runs. `slack_factor`/`slack_amount` configuration parameter is used to specify slack allowed with respect to best performing run. `evaluation_interval` specifies frequency of applying policy and `delay_evaluation` specifies number of intervals to delay policy evaluation for run termination. This parameter ensures protection against premature termination of training run.
 
 
 ### Results
