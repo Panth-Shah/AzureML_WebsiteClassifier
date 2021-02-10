@@ -562,17 +562,18 @@ Configuration object created for deploying an AciWebservice used for this projec
 
 Figure 14. Entry script `scoring_file_v_1_0_0.py` located from the project folder 
 
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_Deploy_Scorefile.PNG)
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_DeployedModel.PNG)
 
 Figure 15. Azure ML Studio: Deployed best performing model 
 
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_Deploy_Scorefile.PNG)
-
-Figure 16. Azure ML Studio: Deployed best performing model 
-
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_Deploy_Scorefile.PNG)
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_DeployedModel_Notebook.PNG)
 
 Figure 17. Python SDK Notebook: Deployment Completed 
+
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+
+Figure 16. Python SDK Notebook: Best performing model test
 
 
 ## Screen Recording
