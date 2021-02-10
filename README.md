@@ -518,6 +518,28 @@ Among supported early termination policies by Azure ML, we are using Bendit Poli
 
 *TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
 
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_RunCopleted.PNG)
+
+Figure 9. Azure ML Studio Experiment submitted with HyperDrive from notebook
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_Running_2.PNG)
+
+Figure 10. Python SDK Notebook: Monitor progress of run using Run Details widget
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_BestModel_Notebook.PNG)
+
+Figure 11. Python SDK Notebook: Best performing model from hyperparameter tuning using HyperDrive
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_BestModel_Metric.PNG)
+
+Figure 12. Python SDK Notebook: HyperDrive Run Primary Metric Plot - Accuracy
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_BestModel_Metric2.PNG)
+
+Figure 13. Python SDK Notebook: Plot displaying `C` and `max-itr` hyperparmeter values selected for all the child runs in an experiment 
+
+
 ## Model Deployment
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
