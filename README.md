@@ -140,20 +140,26 @@ Figure 3. Python SDK Notebook - Best performing run details
 
 Figure 4. Azure ML Studio - AutoML experiment completed
 
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_BestPerformingModel.PNG)
+
+Figure 5. Azure ML Studio - AutoML best perforing model summary
+
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_Metric.PNG)
 
-Figure 5. Azure ML Studio - Performance Metrics of best performing model trained by AutoML
+Figure 6. Azure ML Studio - Performance Metrics of best performing model trained by AutoML
+
 
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_Models.PNG)
 
-Figure 6. Azure ML Studio - Models trained in multiple iterations using AutoML
+Figure 7. Azure ML Studio - Models trained in multiple iterations using AutoML
 
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_RegModelDetail.PNG)
 
-Figure 7. Azure ML Studio - AutoML best performing model register to workspace
+Figure 8. Azure ML Studio - AutoML best performing model register to workspace
 
 ### Hyperparameters generated for models ensembled in Voting Ensemble:
-
+<details>
+  <summary>Click to expand!</summary> 
 	datatransformer
 	{'enable_dnn': None,
 	 'enable_feature_sweeping': None,
@@ -456,6 +462,10 @@ Figure 7. Azure ML Studio - AutoML best performing model register to workspace
 	 'tol': 0.0001,
 	 'verbose': 0,
 	 'warm_start': False}
+</details>
+### Hyperparameters generated for models ensembled in Voting Ensemble:
+
+	
  
 ## Hyperparameter Tuning
 *TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
