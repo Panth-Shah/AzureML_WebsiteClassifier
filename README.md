@@ -1,4 +1,4 @@
-# Microsoft Azure Captsone Project: Detect Malicious Websites
+# Microsoft Azure Captsone Project: Classify Malicious and Benign Websites
 
 ## Project Abstract: 
 
