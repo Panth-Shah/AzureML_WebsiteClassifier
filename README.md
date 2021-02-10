@@ -152,14 +152,8 @@ Figure 6. Azure ML Studio - Models trained in multiple iterations using AutoML
 
 Figure 7. Azure ML Studio - AutoML best performing model register to workspace
 
-<details><summary>**Hyperparameters generated for models ensembled in Voting Ensemble:**</summary>
-<p>
-```python
-print("hello world!")
-```
+### Hyperparameters generated for models ensembled in Voting Ensemble:
 
-</p>
-</details>
 	datatransformer
 	{'enable_dnn': None,
 	 'enable_feature_sweeping': None,
