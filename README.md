@@ -159,7 +159,8 @@ Figure 8. Azure ML Studio - AutoML best performing model register to workspace
 
 ### Hyperparameters generated for models ensembled in Voting Ensemble:
 <details>
-  <summary>Click to expand!</summary> 
+  <summary>Click to expand!</summary>
+
 	datatransformer
 	{'enable_dnn': None,
 	 'enable_feature_sweeping': None,
@@ -463,10 +464,7 @@ Figure 8. Azure ML Studio - AutoML best performing model register to workspace
 	 'verbose': 0,
 	 'warm_start': False}
 </details>
-### Hyperparameters generated for models ensembled in Voting Ensemble:
 
-	
- 
 ## Hyperparameter Tuning
 *TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
 
