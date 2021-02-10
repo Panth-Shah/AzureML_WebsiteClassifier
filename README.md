@@ -543,6 +543,25 @@ Figure 13. Python SDK Notebook: Plot displaying `C` and `max-itr` hyperparmeter 
 ## Model Deployment
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
+From both the approaches, `Voting Ensemble` is the best performing model obtained using `AutoML` experiment. Now, we will need to deploy this model as a HTTP web service in Azure Cloud. Below are the steps involved in deployment workflow for our model:
+
+1. Register the model with Azure ML Workspace
+2. Prepare inference configuration by providing entry script to receive data submitted to a deployed web service
+3. Choose a compute target as `Azure Container Instance` to deploy model
+4. Define deployment configuration using `AciWebservice.deploy_configuration()`
+5. Deploy best perforing model using `Model.deploy()`
+
+Configuration object created for deploying an AciWebservice used for this project is as follows:
+
+	aciconfig = AciWebservice.deploy_configuration(cpu_cores = 1, 
+												   memory_gb = 1, 
+												   tags = {'area': "bmData", 'type': "capstone_autoML_Classifier"}, 
+												   description = 'sample service for Capstone Project AutoML Classifier for Websites')
+
+
+Figure 14. Entry script `score.py` will be located from the project folder   
+
+
 ## Screen Recording
 *TODO* Provide a link to a screen recording of the project in action. Remember that the screencast should demonstrate:
 - A working model
