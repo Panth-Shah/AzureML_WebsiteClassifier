@@ -3,52 +3,78 @@ import argparse
 import os
 import numpy as np
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 from azureml.core.run import Run
+from azureml.core.dataset import Dataset
 from azureml.data.dataset_factory import TabularDatasetFactory
 
-def onehot_encode(df, column_dict):
-    df = df.copy()
-    for column, prefix in column_dict.items():
-        dummies = pd.get_dummies(df[column], prefix=prefix)
-        df = pd.concat([df, dummies], axis=1)
-        df = df.drop(column, axis=1)
-    return df
+# +
+import logging
+import os
+import csv
 
-def preprocess_inputs(df):
-    df = df.copy()
+from matplotlib import pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import datasets
+import pkg_resources
+
+import azureml.core
+from azureml.core.experiment import Experiment
+from azureml.core.workspace import Workspace
+from azureml.train.automl import AutoMLConfig
+from azureml.core.dataset import Dataset
+
+from azureml.pipeline.steps import AutoMLStep
+
+# Check core SDK version number
+print("SDK version:", azureml.core.VERSION)
+
+
+# -
+
+def onehot_encode(df, column_dict):
+    df_copy = df.copy()
+    for column, prefix in column_dict.items():
+        dummies = pd.get_dummies(df_copy[column], prefix=prefix)
+        df_copy = pd.concat([df_copy, dummies], axis=1)
+        df_copy = df_copy.drop(column, axis=1)
+    return df_copy
+
+def data_cleaning(data):
+    data_copy=data.copy()
     
-    # Drop URL column
-    df = df.drop('URL', axis=1)
+    data_copy=data_copy.drop('URL', axis=1)
     
-    # Extract datetime features
-    for column in ['WHOIS_REGDATE', 'WHOIS_UPDATED_DATE']:
-        df[column] = pd.to_datetime(df[column], errors='coerce')
+    for col in ['WHOIS_REGDATE', 'WHOIS_UPDATED_DATE']:
+        data_copy[col] = pd.to_datetime(data_copy[col], utc=True, errors='coerce')
     
-    df['REG_YEAR'] = df['WHOIS_REGDATE'].apply(lambda x: x.year)
-    df['REG_MONTH'] = df['WHOIS_REGDATE'].apply(lambda x: x.month)
-    df['REG_DAY'] = df['WHOIS_REGDATE'].apply(lambda x: x.day)
-    df['REG_HOUR'] = df['WHOIS_REGDATE'].apply(lambda x: x.hour)
-    df['REG_MINUTE'] = df['WHOIS_REGDATE'].apply(lambda x: x.minute)
+    data_copy['REGYEAR']=data_copy['WHOIS_REGDATE'].apply(lambda dt: dt.year)
+    data_copy['REGMONTH']=data_copy['WHOIS_REGDATE'].apply(lambda dt: dt.month)
+    data_copy['REGDAY']=data_copy['WHOIS_REGDATE'].apply(lambda dt: dt.day)
+    data_copy['REGHOUR']=data_copy['WHOIS_REGDATE'].apply(lambda dt: dt.hour)
+    data_copy['REGMINUTE']=data_copy['WHOIS_REGDATE'].apply(lambda dt: dt.minute)
     
-    df['UPD_YEAR'] = df['WHOIS_UPDATED_DATE'].apply(lambda x: x.year)
-    df['UPD_MONTH'] = df['WHOIS_UPDATED_DATE'].apply(lambda x: x.month)
-    df['UPD_DAY'] = df['WHOIS_UPDATED_DATE'].apply(lambda x: x.day)
-    df['UPD_HOUR'] = df['WHOIS_UPDATED_DATE'].apply(lambda x: x.hour)
-    df['UPD_MINUTE'] = df['WHOIS_UPDATED_DATE'].apply(lambda x: x.minute)
+    data_copy['UPDATEDYEAR']=data_copy['WHOIS_UPDATED_DATE'].apply(lambda dt: dt.year)
+    data_copy['UPDATEDMONTH']=data_copy['WHOIS_UPDATED_DATE'].apply(lambda dt: dt.month)
+    data_copy['UPDATEDDAY']=data_copy['WHOIS_UPDATED_DATE'].apply(lambda dt: dt.day)
+    data_copy['UPDATEDHOUR']=data_copy['WHOIS_UPDATED_DATE'].apply(lambda dt: dt.hour)
+    data_copy['UPDATEDMINUTE']=data_copy['WHOIS_UPDATED_DATE'].apply(lambda dt: dt.minute)
     
-    df = df.drop(['WHOIS_REGDATE', 'WHOIS_UPDATED_DATE'], axis=1)
+    data_copy = data_copy.drop(['WHOIS_REGDATE', 'WHOIS_UPDATED_DATE'], axis=1)
+        
+
+    data_copy = data_copy.select_dtypes(include='int64').fillna(data_copy.mean())
     
-    
-    # One-hot encode categorical features
     for column in ['CHARSET', 'SERVER', 'WHOIS_COUNTRY', 'WHOIS_STATEPRO']:
-        df[column] = df[column].apply(lambda x: x.lower() if str(x) != 'nan' else x)
-    
-    df = onehot_encode(
-        df,
+        data[column] = data[column].apply(lambda x: x.lower() if str(x) != 'nan' else x)
+
+    encoded_df = onehot_encode(
+        data[['CHARSET', 'SERVER', 'WHOIS_COUNTRY', 'WHOIS_STATEPRO']],
         column_dict={
             'CHARSET': 'CH',
             'SERVER': 'SV',
@@ -57,18 +83,18 @@ def preprocess_inputs(df):
         }
     )
     
-    # Fill missing values
-    missing_value_columns = df.columns[df.isna().sum() > 0]
-    
-    for column in missing_value_columns:
-        df[column] = df[column].fillna(df[column].mean())
-    
-    # Split df into X and y
-    y = df['Type'].copy()
-    X = df.drop('Type', axis=1).copy()
+    columns_to_scale  = ['URL_LENGTH', 'NUMBER_SPECIAL_CHARACTERS', 'TCP_CONVERSATION_EXCHANGE',
+       'DIST_REMOTE_TCP_PORT', 'REMOTE_IPS', 'APP_BYTES', 'SOURCE_APP_PACKETS',
+       'REMOTE_APP_PACKETS', 'SOURCE_APP_BYTES', 'REMOTE_APP_BYTES',
+       'APP_PACKETS']
 
+    sc = StandardScaler()
+    clean_df_sc = sc.fit_transform(data_copy[columns_to_scale])
+    scaled_clean_df = pd.DataFrame(clean_df_sc, index=data_copy.index, columns=columns_to_scale)
     
-    return X, y
+    final_df = pd.concat([scaled_clean_df, encoded_df, data_copy['Type']], axis=1)
+
+    return final_df
 
 
 def main():
@@ -93,24 +119,12 @@ def main():
     # Perform Data pre-processing
     ds_data = dataset.to_pandas_dataframe()
     
-    X, y = preprocess_inputs(ds_data)
-        
+    clean_data = data_cleaning(ds_data)
+
+    x = clean_data.drop('Type', axis=1).values
+    y = clean_data['Type'].values
     # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, random_state=123)
-    
-    # Scale X with a standard scaler
-    scaler = StandardScaler()
-    scaler.fit(X_train)
-    
-    X_train = pd.DataFrame(scaler.transform(X_train), columns=X.columns)
-    X_test = pd.DataFrame(scaler.transform(X_test), columns=X.columns)
-    
-    # Remove feature columns that were reduced to single-value columns during the train-test split
-    single_value_columns = X_train.columns[[len(X_train[column].unique()) == 1 for column in X_train.columns]]
-    
-    X_train = X_train.drop(single_value_columns, axis=1)
-    X_test = X_test.drop(single_value_columns, axis=1)
-    
+    x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.2,stratify=y,random_state = 100)
 
     model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
 
