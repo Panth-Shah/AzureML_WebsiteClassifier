@@ -115,7 +115,6 @@ Configration | Details | Value
 Specifying `"featurization": 'auto'` enables autometic preprocessing of data which includes applying data guardrails and featurization steps like **Drop High Cardinality, Impute missing values, Generate more features, Transform and encode, Word embedding, Cluster Distance etc.**
 
 ### Results
-*TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
 
 - Among all the models trained by AutoML, `Voting Ensemble` outperformed all the other models with `97.249% accuracy`.
 
@@ -466,7 +465,6 @@ Figure 8. Azure ML Studio - AutoML best performing model register to workspace
 </details>
 
 ## Hyperparameter Tuning
-*TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
 
 In this section of the project, we will be training and tuning classifier using Azure ML's `HyperDrive package`. Here, we will train a model `Logisitc Regression` classification algorithm using AzureML python SDK with Scikit-learn to perform classification on Website URL dataset and classify URLs into malicious and benign categories.  This problem demands binary classification and as there are only two categories, this makes classification task perfect for logistic regression. It also is very fast at classifying unknown records and is easy to implement, intepret, and very efficient to train. Also for this project, as target variable falls into discrete categories, logistic regression is an ideal choice.
 
@@ -514,10 +512,6 @@ Among supported early termination policies by Azure ML, we are using Bendit Poli
 
 
 ### Results
-*TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
-
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
-
 
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Hyperdrive_RunCopleted.PNG)
 
@@ -539,9 +533,25 @@ Figure 12. Python SDK Notebook: HyperDrive Run Primary Metric Plot - Accuracy
 
 Figure 13. Python SDK Notebook: Plot displaying `C` and `max-itr` hyperparmeter values selected for all the child runs in an experiment 
 
+## Model Improvment:
+
+- According to Azure AutoML's Data Guardrails analysis, **class immbalance** is detected in the provided dataset for this project. Here, class distribution of sample space in the training dataset is severly disproportionated. Because input data has a bias towards one class, this can lead to a falsely perceived positive effect of a model's accuracy.
+To improve accuracy of the prediction model, will use synthetic sampling techniques like `SMOTE`, `MSMOTE` and other ensemble techniques to increase the frequency of the minority class or decrease the frequncy of the majority class.
+	- **How upsampling improves performance of the model:** Using oversampling techniques like SMOTE, minority class is over-sampled by taking each minority class sample and introducing synthetic examples to create large and less specific decision boundaries that increase the generalization capabilities of classifiers.
+
+- Avoiding misleading data in order to imporve the performance of our prediction model is a critical step as irrelevant attributes in your dataset can result into overfitting. As a future enhancement of this project, leveraging **Automated ML's Model Interpretability** dashboard, will inspect which dataset feature is essential and used by model to make its predictions and determine best and worst performing features to include/exclude them from future runs. Based on this finding, will customize featurization settings used by Azure AutoML to train our model. `FeaturizationConfig` defines feature engineering configuration for our automated ML experiment, using which we will exclude irrelevent features identified from AutoML's model interpretability dashboard. While training SKLearn Logistic Regression classification model, **[Recursive Feature Elimination](https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html)** can also be used to rank the feature and recursively reducing the sets of features.
+	- **How feature selection improves performance of the model:** In classification models like logistic regression which can model binary variables, the information value is critical to understand how important given categorical variale is in explaning the binary target variable. An iterative process of dividing features into subsets based on weights of evidence will help us achieve higher AUC and we can expect evolution in the True Positive rate and the ROC metric for each feature selection iteration.
+
+- With current project, we are using only two hyperparameters `C` and `max-itr` to train Logistic Regression model. Adding additional parameters like `penalty`, `class_weight`, `intercept_scaling`, `n_jobs`, `l1_ratio` etc. will allow us to control training model and performance of our classifier can be improvised.
+	- **How choosing more hyperparameters improves performance of the model:** More number of parameters to tune classifier will increase the hyperparameter search space to explore and better accuracy can be achieved with different combinations of parameters applying sampling algorithms. 
+
+- Due to class imbalance problem we have with the given data set, it is possible that model will always only predict class which has higher % instances in the dataset. This results into excellent classification accuracy as it only reflects the underlying class distribution. This situation is called **Accuracy Paradox**, where accuracy is not the best metric to use for performance evaluation of prediction model and can be misleading. As a future improvements of this model, will use additional measures such as **Precision, Recall, F1 Score** etc. to evaluate a trained classifier.
+	- **How use of additional performance metrics help improve performance of the model:** With highly imbalance dataset, chances while performing k-fold cross validation procedure in the training set is that single fold may not contain a positive sample, which results into True Positive Rate (TPR) and False Negtive Rate (FNR) to 0. We will choose ROC AUC over Accuracy as plot from the ROC curve will help understand trade-off in performance for different threshold values when interpreting probabilistic predictions. Changing the threshold of classification will change the balance of predictions towards improving the TPR at the expense of FPR and vice versa and so ROC analysis doesn't have any bias towards models which performs well on either minority or majority class, which is a helpful metric to deal with imbalance dataset.
+
+- With more compute resources in hand for future experiments, will perform parameter sampling over the search space of hyperparameter for **HyperDriveConfig** using **Bayesian Sampling** technique. To obtain better results, will go with Azure ML's recommended approach by maximizing number of runs greater than or equal to 20 times the number of hyperparameters being tuned using this sampling technique. Will also keep number of concurrent runs lower, which will lead us to better sampling convergence, since the smaller degree of parallelism increases the number of runs that benefit parameter tuning process by taking reference from previously completed runs.
+	- **How Bayesian Sampling will improve performance of the model:** Bayesian sampling over hyperparameter search space will be advantageous in improving our model performance iteratively as this technique intelligently picks the next sample of hyperparameter based on how previous sample performed with the aim to improve the primary metric determined. 
 
 ## Model Deployment
-*TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
 From both the approaches, `Voting Ensemble` is the best performing model obtained using `AutoML` experiment. Now, we will need to deploy this model as a HTTP web service in Azure Cloud. Below are the steps involved in deployment workflow for our model:
 
@@ -583,9 +593,9 @@ Screen Recording with detailed explanation uploaded and can be found using [Link
 - Demo of the deployed  model
 - Demo of a sample request sent to the endpoint and its response
 
-## Standout Suggestions:
+## Standout Suggestions
 
-### Enable Logging in your deployed web app:
+### Enable Logging in your deployed web app
 
 With this project, we have deployed best performing model to HTTP web service endpoints in `Azure Container Instance (ACI)`. To enable collecting additional data from an endpoint mentioned below, we will be **enabling** [Azure Application Insight](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) feature, an extensible Application Performance Management (APM) service.
 
