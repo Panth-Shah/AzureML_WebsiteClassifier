@@ -597,14 +597,22 @@ With this project, we have deployed best performing model to HTTP web service en
 
 To perform this step, we have used `logs.py` script uploaded with this repository. We will dynamically authenticate to Azure, enable Application Insight and Display logs for deployed model.
 
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/Deploy_ScriptEnableAppInsight.PNG)
 
 Figure 17. logs.py script to enable Application Insight for deployed model
 
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/EnableLogging.PNG)
 
-Figure 18. Python SDK Notebook: Best performing model test
+Figure 18. Result - Enable Application Insight using logs.py
 
-![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/EnableLogging_2.PNG)
 
-Figure 19. Python SDK Notebook: Best performing model test
+Figure 19. Result - Enable Application Insight using logs.py
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/ApplicationInsight_Studio.PNG)
+
+Figure 20. Azure ML Studio: Application Insight enabled for deployed service
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/ApplicationInsight_Dashboard.PNG)
+
+Figure 21. MS Azure: Application Insight dashboard for deployed web service
