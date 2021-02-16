@@ -568,19 +568,43 @@ Figure 15. Azure ML Studio: Deployed best performing model
 
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/ExperimentResults/AutoML_DeployedModel_Notebook.PNG)
 
-Figure 17. Python SDK Notebook: Deployment Completed 
+Figure 16. Python SDK Notebook: Deployment Completed 
 
 
 ![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
 
-Figure 16. Python SDK Notebook: Best performing model test
+Figure 17. Python SDK Notebook: Best performing model test
 
 
 ## Screen Recording
-*TODO* Provide a link to a screen recording of the project in action. Remember that the screencast should demonstrate:
+Screen Recording with detailed explanation uploaded and can be found using [Link](https://youtu.be/oWLvQHeSA8Y). This screencast demonstrates:
+
 - A working model
 - Demo of the deployed  model
 - Demo of a sample request sent to the endpoint and its response
 
-## Standout Suggestions
-*TODO (Optional):* This is where you can provide information about any standout suggestions that you have attempted.
+## Standout Suggestions:
+
+### Enable Logging in your deployed web app:
+
+With this project, we have deployed best performing model to HTTP web service endpoints in `Azure Container Instance (ACI)`. To enable collecting additional data from an endpoint mentioned below, we will be **enabling** [Azure Application Insight](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) feature, an extensible Application Performance Management (APM) service.
+
+- Output Data
+- Responses
+- Request rates, response times, and failure rates
+- Dependency rates, response times, and failure rates
+- Exceptions for failed requests
+
+To perform this step, we have used `logs.py` script uploaded with this repository. We will dynamically authenticate to Azure, enable Application Insight and Display logs for deployed model.
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+
+Figure 17. logs.py script to enable Application Insight for deployed model
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+
+Figure 18. Python SDK Notebook: Best performing model test
+
+![Alt Text](https://github.com/Panth-Shah/nd00333-capstone/blob/master/Results/AutoML_Deployed_ModelTest.PNG)
+
+Figure 19. Python SDK Notebook: Best performing model test
