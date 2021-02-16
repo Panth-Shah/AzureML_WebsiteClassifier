@@ -6,9 +6,6 @@ Over the past few years, Web Security has become a growing concern for internet 
 
 A log term-goal of this project will be to develop a real-time system that uses Machine Learning techniques to detect malicious URLs (spam, phishing, exploits, etc.). Techniques explored involving classifying URLs based on their **Lexical** and **Host-based** features, as well as online learning to process large numbers of examples and adapt quickly to evolving URLs over time are captured from research published by PhD scholars from UC San Diago [1] & [2]. This project aims to extend research finding and construct a classifier which can predict malicious and benign website URLs, based on application layer and network characteristics utilizing captured data for this research work.
 
-## Project Set Up and Installation
-*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
-
 ## Dataset:
 
 ### Dataset Overview:
